@@ -3,6 +3,9 @@ import java.util.Scanner;
 public class SDES {
 	public SDES() {}
 
+	/**
+	 * @author Pial Das
+	 */
 	public byte[] encrypt(String plaintext) {
 		byte[] ascii = new byte[plaintext.length()];
 		for (int i = 0; i < plaintext.length(); i++)
