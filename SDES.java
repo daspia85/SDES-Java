@@ -4,7 +4,11 @@ public class SDES {
 	public SDES() {}
 
 	public byte[] encrypt(String plaintext) {
-		return new byte[1];
+		byte[] ascii = new byte[plaintext.length()];
+		for (int i = 0; i < plaintext.length(); i++)
+			ascii[i] = (byte) plaintext.charAt(i);
+		byte[] encrypted_array = encrypt(ascii);
+		return encrypted_array;
 	}
 
 	public byte[] encrypt(byte[] plaintext) {
