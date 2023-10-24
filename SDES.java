@@ -116,4 +116,8 @@ public class SDES {
 	private boolean[] feistel(boolean[] x, boolean[] k) {
 		return new boolean[8];
 	}
+
+	private boolean[] feistelInv(boolean[] y, boolean[] k) {
+		return new boolean[8];
+	}
 }
