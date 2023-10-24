@@ -74,8 +74,27 @@ public class SDES {
 		return Arrays.copyOfRange(inp, inp.length / 2, inp.length);
 	}
 
+	/**
+	 * @author Pial Das
+	 */
 	private boolean[] xor(boolean[] x, boolean[] y) {
-		return new boolean[1];
+		boolean[] shorter, longer;
+		if (x.length < y.length) {
+			shorter = x;
+			longer = y;
+		} else {
+			shorter = y;
+			longer = x;
+		}
+		boolean[] xor_array = new boolean[longer.length];
+		int diff_length = longer.length - shorter.length;
+		for (int index = 0; index < xor_array.length; index++) {
+			if (index - diff_length < 0)
+				xor_array[index] = longer[index] ^ false;
+			else
+				xor_array[index] = shorter[index - diff_length] ^ longer[index];
+		}
+		return xor_array;
 	}
 
 	private boolean[] concat(boolean[] x, boolean[] y) {
