@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Arrays;
 
 public class SDES {
 	public SDES() {}
@@ -59,12 +60,18 @@ public class SDES {
 		return "";
 	}
 
+	/**
+	 * @author Pial Das
+	 */
 	private boolean[] lh(boolean[] inp) {
-		return new boolean[1];
+		return Arrays.copyOfRange(inp, 0, inp.length / 2);
 	}
 
+	/**
+	 * @author Pial Das
+	 */
 	private boolean[] rh(boolean[] inp) {
-		return new boolean[1];
+		return Arrays.copyOfRange(inp, inp.length / 2, inp.length);
 	}
 
 	private boolean[] xor(boolean[] x, boolean[] y) {
