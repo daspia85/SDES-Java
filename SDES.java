@@ -24,8 +24,14 @@ public class SDES {
 		return encrypted_bytes;
 	}
 
+	/**
+	 * @author Pial Das
+	 */
 	public byte[] decrypt(byte[] ciphertext) {
-		return new byte[1];
+		byte[] decrypted_bytes = new byte[ciphertext.length];
+		for (int i = 0; i < ciphertext.length; i++)
+			decrypted_bytes[i] = decryptByte(ciphertext[i]);
+		return decrypted_bytes;
 	}
 
 	private byte encryptByte(byte plainByte) {
