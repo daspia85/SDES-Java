@@ -14,8 +14,14 @@ public class SDES {
 		return encrypted_array;
 	}
 
+	/**
+	 * @author Pial Das
+	 */
 	public byte[] encrypt(byte[] plaintext) {
-		return new byte[1];
+		byte[] encrypted_bytes = new byte[plaintext.length];
+		for (int i = 0; i < plaintext.length; i++)
+			encrypted_bytes[i] = encryptByte(plaintext[i]);
+		return encrypted_bytes;
 	}
 
 	public byte[] decrypt(byte[] ciphertext) {
