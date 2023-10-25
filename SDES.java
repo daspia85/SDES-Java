@@ -160,8 +160,22 @@ public class SDES {
 		return output;
 	}
 
+	/**
+	 * @param x the input array of bits
+	 * @param k the array of bits as the key
+	 * @return an output array of bits as a result of the f function
+	 * @author Pial Das
+	 */
 	private boolean[] f(boolean[] x, boolean[] k) {
-		return new boolean[4];
+		boolean[] ep_x = expPerm(x, new int[]{3, 0, 1, 2, 1, 2, 3, 0});
+		boolean[] key_xor = xor(k, ep_x);
+		boolean[] left_key_xor = lh(key_xor);
+		boolean[] right_key_xor = rh(key_xor);
+		boolean[] s_left = s0(left_key_xor);
+		boolean[] s_right = s1(right_key_xor);
+		boolean[] concat_array = concat(s_left, s_right);
+		boolean[] p4_x = expPerm(concat_array, new int[]{1,3,2,0});
+		return p4_x;
 	}
 
 	private boolean[] feistel(boolean[] x, boolean[] k) {
