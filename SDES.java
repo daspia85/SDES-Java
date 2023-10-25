@@ -5,6 +5,8 @@ public class SDES {
 	public SDES() {}
 
 	/**
+	 * @param plaintext a String as plaintext
+	 * @return an encrypted message as an array of bytes
 	 * @author Pial Das
 	 */
 	public byte[] encrypt(String plaintext) {
@@ -16,6 +18,8 @@ public class SDES {
 	}
 
 	/**
+	 * @param plaintext array of bytes as plaintext
+	 * @return an encrypted message as an array of bytes
 	 * @author Pial Das
 	 */
 	public byte[] encrypt(byte[] plaintext) {
@@ -26,6 +30,8 @@ public class SDES {
 	}
 
 	/**
+	 * @param ciphertext array of bytes as ciphertext
+	 * @return a decrypted message as an array of bytes
 	 * @author Pial Das
 	 */
 	public byte[] decrypt(byte[] ciphertext) {
@@ -61,6 +67,8 @@ public class SDES {
 	}
 
 	/**
+	 * @param inp an array of booleans
+	 * @return the left half of the inputted array
 	 * @author Pial Das
 	 */
 	private boolean[] lh(boolean[] inp) {
@@ -68,6 +76,8 @@ public class SDES {
 	}
 
 	/**
+	 * @param inp an array of booleans
+	 * @return the right half of the inputted array
 	 * @author Pial Das
 	 */
 	private boolean[] rh(boolean[] inp) {
@@ -75,6 +85,9 @@ public class SDES {
 	}
 
 	/**
+	 * @param x an array of booleans
+	 * @param y an array of booleans
+	 * @return an array of booleans that is the exclusive OR of the inputted arrays
 	 * @author Pial Das
 	 */
 	private boolean[] xor(boolean[] x, boolean[] y) {
@@ -107,6 +120,44 @@ public class SDES {
 
 	public boolean[] byteToBitArray(byte number, int size) {
 		return new boolean[1];
+	}
+
+	/**
+	 * @param inp an array of booleans
+	 * @return an array of booleans as the output of the s0 function
+	 * @author Pial Das
+	 */
+	private boolean[] s0(boolean[] inp) {
+		boolean[] output = new boolean[2];
+
+		// To make the variables clear in the SOP equation
+		boolean a = inp[0];
+		boolean b = inp[1];
+		boolean c = inp[2];
+		boolean d = inp[3];
+		
+		output[0] = !a & !b & !c & d | !a & !b & c & d | !a & b & !c & !d | !a & b & c & !d | a & !b & !c & d | a & !b & c & !d | a & b & !c & d | a & b & c & !d | a & b & c & d;  // First bit
+		output[1] = !a & !b & !c & !d | !a & !b & !c & d | !a & b & !c & !d | !a & b & !c & d | a & !b & !c & d | a & !b & c & d | a & b & !c & !d | a & b & !c & d | a & b & c & !d;  // Second bit
+		return output;
+	}
+
+	/**
+	 * @param inp an array of booleans
+	 * @return an array of booleans as the output of the s1 function
+	 * @author Pial Das
+	 */
+	private boolean[] s1(boolean[] inp) {
+		boolean[] output = new boolean[2];
+
+		// To make the variables clear in the SOP equation
+		boolean a = inp[0];
+		boolean b = inp[1];
+		boolean c = inp[2];
+		boolean d = inp[3];
+
+		output[0] = !a & !b & !c & d | !a & b & !c & !d | !a & b & !c & d | !a & b & c & !d | !a & b & c & d | a & !b & !c & !d | a & !b & !c & d | a & b & c & d;  // First bit
+		output[1] = !a & !b & c & !d | !a & b & !c & d | !a & b & c & !d | !a & b & c & d | a & !b & !c & !d | a & !b & c & d | a & b & !c & !d | a & b & c & d;  // Second bit
+		return output;
 	}
 
 	private boolean[] f(boolean[] x, boolean[] k) {
