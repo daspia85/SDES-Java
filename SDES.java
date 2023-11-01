@@ -47,25 +47,148 @@ public class SDES {
 		return decrypted_bytes;
 	}
 
+	/**
+	 * Encrypts a single byte using SDES
+	 * @param byte as plainByte
+	 * @return A byte of cyphertext
+	 * @author Riley Miller
+	 */
 	private byte encryptByte(byte plainByte) {
-		return (byte) 1;
+		boolean[] bitArray = byteToBitArray(plainByte, 8);
+		
+		int[] IP = {1,5,2,0,3,7,4,6};
+		bitArray = expPerm(bitArray, IP);
+		
+		boolean[] left0 = lh(bitArray);
+		boolean[] right0 = rh(bitArray);
+		
+		boolean[] left1 = right0;
+		boolean[] right1 = xor(left0, feistel(right0, key10));
+		
+		boolean[] left2 = right1;
+		boolean[] right2 = xor(left1, feistel(right1, key10));
+		
+		int[] iIP = {3,0,2,4,6,1,7,5};
+		bitArray = expPerm(bitArray, iIP);
+		
+		plainByte = bitArrayToByte(bitArray);
+		return plainByte;
 	}
-
+	
+	/**
+	 * Decrypts a single byte using SDES
+	 * @param byte as cipherByte
+	 * @return A byte of plainText
+	 * @author Riley Miller
+	 */
 	private byte decryptByte(byte cipherByte) {
-		return (byte) 1;
+		boolean[] bitArray = byteToBitArray(cipherByte, 8);
+		int[] IP = {1,5,2,0,3,7,4,6};
+		bitArray = expPerm(bitArray, IP);
+		
+		boolean[] left0 = lh(bitArray);
+		boolean[] right0 = rh(bitArray);
+		
+		boolean[] left1 = right0;
+		boolean[] right1 = xor(left0, feistelInv(right0, key10));
+		
+		boolean[] left2 = right1;
+		boolean[] right2 = xor(left1, feistelInv(right1, key10));
+		
+		int[] iIP = {3,0,2,4,6,1,7,5};
+		bitArray = expPerm(bitArray, iIP);
+		
+		cipherByte = bitArrayToByte(bitArray);
+		return cipherByte;
 	}
 
-	public void show(byte[] digits) {
-	}
-
+	/**
+	 * Outputs an array of bits as 1s and 0s
+	 * @param booleanArray as binaries
+	 * @author Riley Miller
+	 */
 	public void show(boolean[] binaries) {
+		for (int i = 0; i < binaries.length; i++)
+		{
+			System.out.print(binaries[i] == true ? "1" : "0");
+		}
+		System.out.println("");
+	}
+	
+	/**
+	 * Outputs an array of bytes as standard output
+	 * @param byteArray as digits
+	 * @author Riley Miller
+	 */
+	public void show(byte[] digits) {
+		for (int i = 0; i < digits.length-1; i++)
+		{
+			System.out.print(digits[i] + " ");
+		}
+		System.out.println(digits[digits.length-1]);
 	}
 
+	/**
+	 * Expands or permutes from the inp bitArray, producing an expanded/permuted/selected bitArray
+	 * @param booleanArray as input, booleanArray as epv
+	 * @return a permuted/expanded/selected bitArray, or null if there is an error
+	 * @author Riley Miller
+	 */
 	private boolean[] expPerm(boolean[] inp, int[] epv) {
-		return new boolean[1];
+		try {
+			boolean[] newBitArray = inp;
+			for (int i = 0; i < inp.length; i++)
+			{
+				newBitArray[i] = inp[epv[i]];
+			}
+			return newBitArray;
+		} catch (ArrayIndexOutOfBoundsException e)
+		{
+			System.out.println("Out of Bounds Occurred");
+			return null;
+		}
+		return null;
 	}
-
+	
+	static boolean[] key10;
+	/**
+	 * Takes a 10 character input of 1s and 0s and stores them as booleans in key10 
+	 * @param Scanner object as scanner
+	 * @author Riley Miller
+	 */
 	private void getKey10(Scanner scanner) {
+		
+		String scanLine;
+		boolean done = false;
+		while (done == false)
+		{
+			scanLine = scanner.nextLine();
+			if (scanLine.length() == 10)
+			{
+				done = true;
+				for (char letter : scanLine.toCharArray())
+				{
+					if (letter != '0' && letter != '1')
+						done = false;
+				}
+			}
+			
+			if (done == true)
+			{
+				char[] temp = scanLine.toCharArray();
+				for (int i = 0 ; i < temp.length; i++)
+				{
+					if (temp[i] == '0')
+					{
+						key10[i] = false;
+					}
+					else
+					{
+						key10[i] = true;
+					}
+				}
+			}
+		}
 	}
 
 	public String byteArrayToString(byte[] inp) {
