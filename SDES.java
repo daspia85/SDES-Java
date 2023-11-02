@@ -49,57 +49,56 @@ public class SDES {
 
 	/**
 	 * Encrypts a single byte using SDES
+	 *
 	 * @param byte as plainByte
 	 * @return A byte of cyphertext
 	 * @author Riley Miller
 	 */
 	private byte encryptByte(byte plainByte) {
-		boolean[] bitArray = byteToBitArray(plainByte, 8);
+		boolean[] bitArray = byteToBitArray(plainByte, 8);  // Single byte converted to an array of bits
 		
-		int[] IP = {1,5,2,0,3,7,4,6};
-		bitArray = expPerm(bitArray, IP);
-		
-		boolean[] left0 = lh(bitArray);
-		boolean[] right0 = rh(bitArray);
-		
-		boolean[] left1 = right0;
-		boolean[] right1 = xor(left0, feistel(right0, key10));
-		
-		boolean[] left2 = right1;
-		boolean[] right2 = xor(left1, feistel(right1, key10));
-		
-		int[] iIP = {3,0,2,4,6,1,7,5};
-		bitArray = expPerm(bitArray, iIP);
-		
-		plainByte = bitArrayToByte(bitArray);
-		return plainByte;
+		// Inital setup with initial permutation vector (IP)
+		bitArray = expPerm(bitArray, new int[]{1, 5, 2, 0, 3, 7, 4, 6});
+
+		// Go through 2 rounds of the feistel function
+		for (int i = 0; i < 2; i++) {
+			bitArray = feistel(bitArray, key10);
+		}
+
+		// Post-setup with inverse of initial permutation vector (IP^{-1})
+		bitArray = expPerm(bitArray, new int[]{3, 0, 2, 4, 6, 1, 7, 5});
+
+		// Convert array of bits back to a byte
+		byte cipherByte = bitArrayToByte(bitArray);
+
+		return cipherByte;
 	}
 	
 	/**
 	 * Decrypts a single byte using SDES
+	 *
 	 * @param byte as cipherByte
 	 * @return A byte of plainText
 	 * @author Riley Miller
 	 */
 	private byte decryptByte(byte cipherByte) {
-		boolean[] bitArray = byteToBitArray(cipherByte, 8);
-		int[] IP = {1,5,2,0,3,7,4,6};
-		bitArray = expPerm(bitArray, IP);
+		boolean[] bitArray = byteToBitArray(cipherByte, 8);  // Single byte converted to an array of bits
 		
-		boolean[] left0 = lh(bitArray);
-		boolean[] right0 = rh(bitArray);
-		
-		boolean[] left1 = right0;
-		boolean[] right1 = xor(left0, feistelInv(right0, key10));
-		
-		boolean[] left2 = right1;
-		boolean[] right2 = xor(left1, feistelInv(right1, key10));
-		
-		int[] iIP = {3,0,2,4,6,1,7,5};
-		bitArray = expPerm(bitArray, iIP);
-		
-		cipherByte = bitArrayToByte(bitArray);
-		return cipherByte;
+		// Inital setup with initial permutation vector (IP)
+		bitArray = expPerm(bitArray, new int[]{1, 5, 2, 0, 3, 7, 4, 6});
+
+		// Go through 2 rounds of the feistelInv function
+		for (int i = 0; i < 2; i++) {
+			bitArray = feistelInv(bitArray, key10);
+		}
+
+		// Post-setup with inverse of initial permutation vector (IP^{-1})
+		bitArray = expPerm(bitArray, new int[]{3, 0, 2, 4, 6, 1, 7, 5});
+
+		// Convert array of bits back to a byte
+		byte plainByte = bitArrayToByte(bitArray);
+
+		return plainByte;
 	}
 
 	/**
@@ -147,7 +146,6 @@ public class SDES {
 			System.out.println("Out of Bounds Occurred");
 			return null;
 		}
-		return null;
 	}
 	
 	static boolean[] key10;
@@ -157,7 +155,6 @@ public class SDES {
 	 * @author Riley Miller
 	 */
 	private void getKey10(Scanner scanner) {
-		
 		String scanLine;
 		boolean done = false;
 		while (done == false)
@@ -172,7 +169,6 @@ public class SDES {
 						done = false;
 				}
 			}
-			
 			if (done == true)
 			{
 				char[] temp = scanLine.toCharArray();
