@@ -50,8 +50,8 @@ public class SDES {
 	/**
 	 * Encrypts a single byte using SDES
 	 *
-	 * @param byte as plainByte
-	 * @return A byte of cyphertext
+	 * @param plainByte the byte that's in plaintext
+	 * @return A byte of ciphertext
 	 * @author Riley Miller
 	 */
 	private byte encryptByte(byte plainByte) {
@@ -77,7 +77,7 @@ public class SDES {
 	/**
 	 * Decrypts a single byte using SDES
 	 *
-	 * @param byte as cipherByte
+	 * @param cipherByte the byte that's in ciphertext
 	 * @return A byte of plainText
 	 * @author Riley Miller
 	 */
@@ -103,7 +103,8 @@ public class SDES {
 
 	/**
 	 * Outputs an array of bits as 1s and 0s
-	 * @param booleanArray as binaries
+	 *
+	 * @param binaries an array of bits
 	 * @author Riley Miller
 	 */
 	public void show(boolean[] binaries) {
@@ -116,7 +117,8 @@ public class SDES {
 	
 	/**
 	 * Outputs an array of bytes as standard output
-	 * @param byteArray as digits
+	 *
+	 * @param digits an array of ints
 	 * @author Riley Miller
 	 */
 	public void show(byte[] digits) {
@@ -129,16 +131,18 @@ public class SDES {
 
 	/**
 	 * Expands or permutes from the inp bitArray, producing an expanded/permuted/selected bitArray
-	 * @param booleanArray as input, booleanArray as epv
+	 *
+	 * @param inp the input as a bit array
+	 * @param epv the permutation vector
 	 * @return a permuted/expanded/selected bitArray, or null if there is an error
 	 * @author Riley Miller
 	 */
 	private boolean[] expPerm(boolean[] inp, int[] epv) {
 		try {
-			boolean[] newBitArray = inp;
-			for (int i = 0; i < inp.length; i++)
+			boolean[] newBitArray = new boolean[epv.length];
+			for (int i = 0; i < epv.length; i++)
 			{
-				newBitArray[i] = inp[epv[i]];
+				newBitArray[i] = inp[epv[i]];  // The resulting array would be the same size as epv allowing for expansion and selection.
 			}
 			return newBitArray;
 		} catch (ArrayIndexOutOfBoundsException e)
@@ -150,8 +154,9 @@ public class SDES {
 	
 	static boolean[] key10;
 	/**
-	 * Takes a 10 character input of 1s and 0s and stores them as booleans in key10 
-	 * @param Scanner object as scanner
+	 * Takes a 10 character input of 1s and 0s and stores them as booleans
+	 *
+	 * @param scanner grab input from the user for their key
 	 * @author Riley Miller
 	 */
 	private void getKey10(Scanner scanner) {
