@@ -469,8 +469,47 @@ public class SDES {
 		}
 		return result;
 	}
-
+        /**
+     * This method is called once on each round of decryption. 
+     * It is the inverse of feistel. feistelInv(y,k) = (L(y) xor f(R(y),k)) || R(y)
+     * @param y, k
+     * @return a bit array of length 8
+     * @author Luke Lachowicz
+     * @version 11/03/2023
+     */
 	private boolean[] feistelInv(boolean[] y, boolean[] k) {
-		return new boolean[8];
+		// check if y or k is null
+        if (y == null || k == null) {
+            return null;
+        }
+        
+        // split y in half
+        int half = y.length / 2;
+        
+        // left array created for the left half 
+        boolean[] L = new boolean[half];
+        
+        // right array created for the right half
+        boolean[] R = new boolean[half];
+        
+        
+        // stores result of L and k
+        boolean[] function = new boolean[half];
+        // apply XOR to the arrays of L and k and stores result in function array
+        for (int i = 0; i < half; i++) {
+            function[i] = L[i] ^ k[i];
+        }
+        
+        // create array named result to store the result
+        boolean[] result = new boolean[y.length];
+        
+        // combines halves function and Right half to get final result
+        for (int i = 0; i < half; i++) {
+            // copies elements from function array to result
+            result[i] = function[i];
+            // copies elements from Right half to second half of result
+            result[half + i] = R[i];
+        }
+        return result;
 	}
 }
