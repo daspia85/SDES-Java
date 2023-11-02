@@ -193,31 +193,30 @@ public class SDES {
 	}
 
 	/**
-     * Convert the given byte array to a String
-     * @param inp
-     * @return the characters as a string 
-     * @author Luke Lachowicz
-     * @version 11/03/2023
-     */
+	 * Convert the given byte array to a String
+	 *
+	 * @param inp an array of bytes
+	 * @return the characters as a string 
+	 * @author Luke Lachowicz
+	 * @version 11/03/2023
+	 */
 	public String byteArrayToCharString(byte[] inp) {
 		if (inp == null) {
-            return null;
-        }
-        
-        // created an array named arrayToChar equal to the length of the byte array
-        char[] arrayToChar = new char[inp.length];
-        
-        // for loop to loop through the bytes so each byte is stored
-        // in the arrayToChar array and comes out as a string when returned
-        for (int i = 0; i < inp.length; i++) {
-            arrayToChar[i] = (char) inp[i];
-        }
-        
-        // returns the string
-        return new String(arrayToChar);
-        }
-        
-       
+		    return null;
+		}
+
+		// created an array named arrayToChar equal to the length of the byte array
+		char[] arrayToChar = new char[inp.length];
+
+		// for loop to loop through the bytes so each byte is stored
+		// in the arrayToChar array and comes out as a string when returned
+		for (int i = 0; i < inp.length; i++) {
+		    arrayToChar[i] = (char) inp[i];
+		}
+
+		// returns the string
+		return new String(arrayToChar);
+	}
 
 	/**
 	 * Given an array of bits, return only the left helf of the array.
@@ -268,87 +267,95 @@ public class SDES {
 		}
 		return xor_array;
 	}
+
         /**
-     * Concatenate the two bit arrays, x || y
-     * @param boolean[] x, boolean[] y
-     * @return the concatenation of x and y
-     * @author Luke Lachowicz
-     * @version 11/03/2023
-     */
+	 * Concatenate the two bit arrays, x || y
+	 *
+	 * @param x an array of bits
+	 * @param y an array of bits
+	 * @return the concatenation of x and y
+	 * @author Luke Lachowicz
+	 * @version 11/03/2023
+	 */
 	private boolean[] concat(boolean[] x, boolean[] y) {
 		// checks if x and y is null 
-        if (x == null || y == null) {
-            return null;
-        }
-        
-        // add the length of x and y and store it in concatxy
-        int concatxy = x.length + y.length;
-        
-        // combines x and y into an array called list
-        boolean[] list = new boolean[concatxy];
-        
-        // copy elements of array x into the list array
-        for (int i = 0; i < x.length; i++) {
-            list[i] = x[i];
-        }
-        // copy elements of array y into the list array starting from 
-        // where the last place in the x array was left off
-        for (int i = 0; i < y.length; i++) {
-            list[x.length + i] = y[i];
-        }
-        //returns the list
-        return list;
+		if (x == null || y == null) {
+		    return null;
+		}
+
+		// add the length of x and y and store it in concatxy
+		int concatxy = x.length + y.length;
+
+		// combines x and y into an array called list
+		boolean[] list = new boolean[concatxy];
+
+		// copy elements of array x into the list array
+		for (int i = 0; i < x.length; i++) {
+		    list[i] = x[i];
+		}
+		// copy elements of array y into the list array starting from 
+		// where the last place in the x array was left off
+		for (int i = 0; i < y.length; i++) {
+		    list[x.length + i] = y[i];
+		}
+		//returns the list
+		return list;
 	}
+
         /**
-     * Convert the given bit array to a single byte
-     * @param inp
-     * @return a byte corresponding to the given array of bits
-     * @author Luke Lachowicz
-     * @version 11/03/2023
-     */
+	 * Convert the given bit array to a single byte
+	 *
+	 * @param inp an array of bits
+	 * @return a byte corresponding to the given array of bits
+	 * @author Luke Lachowicz
+	 * @version 11/03/2023
+	 */
 	public byte bitArrayToByte(boolean[] inp) {
-	// checks to see if inp is null or length is greater than 8
-        // returns 0 if this is the case
-        if (inp == null || inp.length != 8) {
-            return 0;
-        }
-        
-        byte b = 0;
-        // loops through the array inp to process each bit
-        for (int i = 0; i < 8; i++) {
-            if (inp[i]) {
-                // left shifts 1 to determine bit position. bitwise OR operator 
-                // sets the bit in byte b based on current value. 
-                b |= (1 << (7 - i));
-            }
-        }
-        
-        // returns byte b after looping through the bytes and setting the value
-        return b;
+		// checks to see if inp is null or length is greater than 8
+		// returns 0 if this is the case
+		if (inp == null || inp.length != 8) {
+		    return 0;
+		}
+
+		byte b = 0;
+		// loops through the array inp to process each bit
+		for (int i = 0; i < 8; i++) {
+		    if (inp[i]) {
+			// left shifts 1 to determine bit position. bitwise OR operator 
+			// sets the bit in byte b based on current value. 
+			b |= (1 << (7 - i));
+		    }
+		}
+
+		// returns byte b after looping through the bytes and setting the value
+		return b;
 	}
-         /**
-     * Convert the given byte to a bit array, of the given size
-     * @param size
-     * @return an array of bits corresponding to the given byte
-     * @author Luke Lachowicz
-     * @version 11/03/2023
-     */
+
+	/**
+	 * Convert the given byte to a bit array, of the given size
+	 *
+	 * @param b a byte
+	 * @param size the size of the resulting array
+	 * @return an array of bits corresponding to the given byte
+	 * @author Luke Lachowicz
+	 * @version 11/03/2023
+	 */
 	public boolean[] byteToBitArray(byte b, int size) {
 		// checks to see if size of array is 0 or greater than 8 
-        if (size <= 0 || size > 8) {
-            return null;
-        }
-       
-        // create array equal to size
-        boolean[] array = new boolean[size];
-        
-        // iterate through each bit starting from left to right
-        // bitwise AND to set bits 
-        for (int i = size -1; i >= 0; i--) {
-            array[i] = (b & ( 1 << i)) != 0;
-        }
-        
-        return array;
+		if (size <= 0 || size > 8) {
+		    return null;
+		}
+
+		// create array equal to size
+		boolean[] array = new boolean[size];
+
+		// iterate through each bit starting from left to right
+		// bitwise AND to set bits 
+		for (int i = size -1; i >= 0; i--) {
+		    array[i] = (b & ( 1 << i)) != 0;
+		}
+
+		return array;
 	}
 
 	/**
@@ -412,53 +419,55 @@ public class SDES {
 		boolean[] p4_x = expPerm(concat_array, new int[]{1,3,2,0});  // Permutate the resulted array with the P4 permutation vector.
 		return p4_x;
 	}
-        /**
-     * This method is called once on each round of encryption 
-     * feistel(x,k) = R(x) || (L(x) xor f(R(x),k))
-     * @param x, k
-     * @return a bit array of length 8
-     * @author Luke Lachowicz
-     * @version 11/03/2023
-     */
+
+	/**
+	 * This method is called once on each round of encryption feistel(x,k) = R(x) || (L(x) xor f(R(x),k))
+	 *
+	 * @param x an array of bits (from the byte of the plaintext)
+	 * @param k an array of bits that's the key
+	 * @return a bit array of length 8
+	 * @author Luke Lachowicz
+	 * @version 11/03/2023
+	 */
 	private boolean[] feistel(boolean[] x, boolean[] k) {
 		// check if x or k is null
-        if (x == null || k == null) {
-            return null;
-        }
-        
-        // split x in half
-        int half = x.length / 2;
-        
-        // left array created for the left half 
-        boolean[] L = new boolean[half];
-        
-        // right array created for the right half
-        boolean[] R = new boolean[half];
-        
-        // copies half of x to the Left array and other half of x to the Right array
-        for (int i = 0; i < half; i++) {
-            L[i] = x[i];
-            R[i] = x[half + i];
-        }
-        
-        // stores result of L and k
-        boolean[] function = new boolean[half];
-        // apply XOR to the arrays of L and k and stores result in function array
-        for (int i = 0; i < half; i++) {
-            function[i] = L[i] ^ k[i];
-        }
-        
-        // create array named result to store the result
-        boolean[] result = new boolean[x.length];
-        
-        // combines R and function to get final result
-        for (int i = 0; i < half; i++) {
-            // copies elements from R to result
-            result[i] = R[i];
-            // copies elements from function array to second half of result
-            result[half + i] = function[i];
-        }
-        return result;
+		if (x == null || k == null) {
+		    return null;
+		}
+
+		// split x in half
+		int half = x.length / 2;
+
+		// left array created for the left half 
+		boolean[] L = new boolean[half];
+
+		// right array created for the right half
+		boolean[] R = new boolean[half];
+
+		// copies half of x to the Left array and other half of x to the Right array
+		for (int i = 0; i < half; i++) {
+		    L[i] = x[i];
+		    R[i] = x[half + i];
+		}
+
+		// stores result of L and k
+		boolean[] function = new boolean[half];
+		// apply XOR to the arrays of L and k and stores result in function array
+		for (int i = 0; i < half; i++) {
+		    function[i] = L[i] ^ k[i];
+		}
+
+		// create array named result to store the result
+		boolean[] result = new boolean[x.length];
+
+		// combines R and function to get final result
+		for (int i = 0; i < half; i++) {
+		    // copies elements from R to result
+		    result[i] = R[i];
+		    // copies elements from function array to second half of result
+		    result[half + i] = function[i];
+		}
+		return result;
 	}
 
 	private boolean[] feistelInv(boolean[] y, boolean[] k) {
