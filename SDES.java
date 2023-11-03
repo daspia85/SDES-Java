@@ -2,7 +2,13 @@ import java.util.Scanner;
 import java.util.Arrays;
 
 public class SDES {
-	public SDES() {}
+	static boolean[] key10;
+	Scanner scanner;
+	public SDES() {
+		key10 = new boolean[10];
+		scanner = new Scanner(System.in);
+		getKey10(scanner);
+	}
 
 	/**
 	 * Encrypt a given plaintext message that's a String and return the corresponding ciphertext. The characters of the string will be converted as ASCII (byte) values and be encrypted.
@@ -54,13 +60,14 @@ public class SDES {
 	 * @return A byte of ciphertext
 	 * @author Riley Miller
 	 */
-	private byte encryptByte(byte plainByte) {
+	public byte encryptByte(byte plainByte) {
 		boolean[] bitArray = byteToBitArray(plainByte, 8);  // Single byte converted to an array of bits
 		
 		// Inital setup with initial permutation vector (IP)
 		bitArray = expPerm(bitArray, new int[]{1, 5, 2, 0, 3, 7, 4, 6});
 
 		// Go through 2 rounds of the feistel function
+		key10 = 
 		for (int i = 0; i < 2; i++) {
 			bitArray = feistel(bitArray, key10);
 		}
@@ -81,7 +88,7 @@ public class SDES {
 	 * @return A byte of plainText
 	 * @author Riley Miller
 	 */
-	private byte decryptByte(byte cipherByte) {
+	public byte decryptByte(byte cipherByte) {
 		boolean[] bitArray = byteToBitArray(cipherByte, 8);  // Single byte converted to an array of bits
 		
 		// Inital setup with initial permutation vector (IP)
@@ -137,35 +144,36 @@ public class SDES {
 	 * @return a permuted/expanded/selected bitArray, or null if there is an error
 	 * @author Riley Miller
 	 */
-	private boolean[] expPerm(boolean[] inp, int[] epv) {
+	public boolean[] expPerm(boolean[] inp, int[] epv) {
+		int pos_exception = -1;
 		try {
 			boolean[] newBitArray = new boolean[epv.length];
 			for (int i = 0; i < epv.length; i++)
 			{
+				pos_exception = i;
 				newBitArray[i] = inp[epv[i]];  // The resulting array would be the same size as epv allowing for expansion and selection.
 			}
 			return newBitArray;
 		} catch (ArrayIndexOutOfBoundsException e)
 		{
-			System.out.println("Out of Bounds Occurred");
+			System.out.println("Out of Bounds Occurred. Position '" + pos_exception + "' for given permutation vector is not valid.");
 			return null;
 		}
 	}
 	
-	static boolean[] key10;
 	/**
 	 * Takes a 10 character input of 1s and 0s and stores them as booleans
 	 *
 	 * @param scanner grab input from the user for their key
 	 * @author Riley Miller
 	 */
-	private void getKey10(Scanner scanner) {
+	public void getKey10(Scanner scanner) {
 		String scanLine;
 		boolean done = false;
 		while (done == false)
 		{
 			scanLine = scanner.nextLine();
-			if (scanLine.length() == 10)
+			if (scanLine.length() == 8)
 			{
 				done = true;
 				for (char letter : scanLine.toCharArray())
@@ -225,7 +233,7 @@ public class SDES {
 	 * @return the left half of the inputted array
 	 * @author Pial Das
 	 */
-	private boolean[] lh(boolean[] inp) {
+	public boolean[] lh(boolean[] inp) {
 		return Arrays.copyOfRange(inp, 0, inp.length / 2);  // Take the index from 0 to the half-way point and copy the elements to another array to return.
 	}
 
@@ -236,7 +244,7 @@ public class SDES {
 	 * @return the right half of the inputted array
 	 * @author Pial Das
 	 */
-	private boolean[] rh(boolean[] inp) {
+	public boolean[] rh(boolean[] inp) {
 		return Arrays.copyOfRange(inp, inp.length / 2, inp.length);  // Take the index from the half-way point to the end of the array and copy the elements to another array to return.
 	}
 
@@ -248,7 +256,7 @@ public class SDES {
 	 * @return an array of booleans that is the exclusive OR of the inputted arrays
 	 * @author Pial Das
 	 */
-	private boolean[] xor(boolean[] x, boolean[] y) {
+	public boolean[] xor(boolean[] x, boolean[] y) {
 		boolean[] shorter, longer;
 		if (x.length < y.length) {  // Determine which array is shorter/longer.
 			shorter = x;
@@ -277,7 +285,7 @@ public class SDES {
 	 * @author Luke Lachowicz
 	 * @version 11/03/2023
 	 */
-	private boolean[] concat(boolean[] x, boolean[] y) {
+	public boolean[] concat(boolean[] x, boolean[] y) {
 		// checks if x and y is null 
 		if (x == null || y == null) {
 		    return null;
@@ -365,7 +373,7 @@ public class SDES {
 	 * @return an array of booleans as the output of the s0 function
 	 * @author Pial Das
 	 */
-	private boolean[] s0(boolean[] inp) {
+	public boolean[] s0(boolean[] inp) {
 		boolean[] output = new boolean[2];
 
 		// To make the variables clear in the SOP equation.
@@ -386,7 +394,7 @@ public class SDES {
 	 * @return an array of booleans as the output of the s1 function
 	 * @author Pial Das
 	 */
-	private boolean[] s1(boolean[] inp) {
+	public boolean[] s1(boolean[] inp) {
 		boolean[] output = new boolean[2];
 
 		// To make the variables clear in the SOP equation.
@@ -401,14 +409,14 @@ public class SDES {
 	}
 
 	/**
-	 * The SDES internal "f" function (the "round" function) is peformed by using a given array of bits and a given key as an array of bits and returns the output of the function "f" as a 4-bit array of bits.
+	 * The SDES internal "f" function (the "round" function) is peformed by using a given 4-bit array and a given key as an 8-bit array and returns the output of the function "f" as a 4-bit array.
 	 *
 	 * @param x the input array of bits
 	 * @param k the array of bits as the key
 	 * @return an output array of bits as a result of the f function
 	 * @author Pial Das
 	 */
-	private boolean[] f(boolean[] x, boolean[] k) {
+	public boolean[] f(boolean[] x, boolean[] k) {
 		boolean[] ep_x = expPerm(x, new int[]{3, 0, 1, 2, 1, 2, 3, 0});  // Permutate with the EP permutation vector.
 		boolean[] key_xor = xor(k, ep_x);  // Peform the XOR operation between the key and the array that has been permutated with the EP vector.
 		boolean[] left_key_xor = lh(key_xor);  // Take the left half of the array.
@@ -424,92 +432,45 @@ public class SDES {
 	 * This method is called once on each round of encryption feistel(x,k) = R(x) || (L(x) xor f(R(x),k))
 	 *
 	 * @param x an array of bits (from the byte of the plaintext)
-	 * @param k an array of bits that's the key
+	 * @param k the key as an array of bits
 	 * @return a bit array of length 8
 	 * @author Luke Lachowicz
 	 * @version 11/03/2023
 	 */
-	private boolean[] feistel(boolean[] x, boolean[] k) {
-		// check if x or k is null
-		if (x == null || k == null) {
-		    return null;
-		}
+	public boolean[] feistel(boolean[] x, boolean[] k) {
+		// Return left and right halfs of x
+		boolean[] left = lh(x);
+		boolean[] right = rh(x);
+		boolean[] f_result = f(right, k);  // Get result from the round function
 
-		// split x in half
-		int half = x.length / 2;
+		// apply XOR to the arrays of L and f(R(x),k) and stores result in new_right
+		boolean[] new_right = xor(left, f_result);
 
-		// left array created for the left half 
-		boolean[] L = new boolean[half];
-
-		// right array created for the right half
-		boolean[] R = new boolean[half];
-
-		// copies half of x to the Left array and other half of x to the Right array
-		for (int i = 0; i < half; i++) {
-		    L[i] = x[i];
-		    R[i] = x[half + i];
-		}
-
-		// stores result of L and k
-		boolean[] function = new boolean[half];
-		// apply XOR to the arrays of L and k and stores result in function array
-		for (int i = 0; i < half; i++) {
-		    function[i] = L[i] ^ k[i];
-		}
-
-		// create array named result to store the result
-		boolean[] result = new boolean[x.length];
-
-		// combines R and function to get final result
-		for (int i = 0; i < half; i++) {
-		    // copies elements from R to result
-		    result[i] = R[i];
-		    // copies elements from function array to second half of result
-		    result[half + i] = function[i];
-		}
+		// concatenate the old right with the new right and return
+		boolean[] result = concat(right, new_right);
 		return result;
 	}
+
         /**
-     * This method is called once on each round of decryption. 
-     * It is the inverse of feistel. feistelInv(y,k) = (L(y) xor f(R(y),k)) || R(y)
-     * @param y, k
-     * @return a bit array of length 8
-     * @author Luke Lachowicz
-     * @version 11/03/2023
-     */
-	private boolean[] feistelInv(boolean[] y, boolean[] k) {
-		// check if y or k is null
-        if (y == null || k == null) {
-            return null;
-        }
-        
-        // split y in half
-        int half = y.length / 2;
-        
-        // left array created for the left half 
-        boolean[] L = new boolean[half];
-        
-        // right array created for the right half
-        boolean[] R = new boolean[half];
-        
-        
-        // stores result of L and k
-        boolean[] function = new boolean[half];
-        // apply XOR to the arrays of L and k and stores result in function array
-        for (int i = 0; i < half; i++) {
-            function[i] = L[i] ^ k[i];
-        }
-        
-        // create array named result to store the result
-        boolean[] result = new boolean[y.length];
-        
-        // combines halves function and Right half to get final result
-        for (int i = 0; i < half; i++) {
-            // copies elements from function array to result
-            result[i] = function[i];
-            // copies elements from Right half to second half of result
-            result[half + i] = R[i];
-        }
-        return result;
+	 * This method is called once on each round of decryption. It is the inverse of feistel. feistelInv(y,k) = (L(y) xor f(R(y),k)) || R(y)
+	 *
+	 * @param y an array of bits (from the byte of the ciphertext)
+	 * @param k the key as an array of bits
+	 * @return a bit array of length 8
+	 * @author Luke Lachowicz
+	 * @version 11/03/2023
+	 */
+	public boolean[] feistelInv(boolean[] y, boolean[] k) {
+		// Return left and right halfs of y
+		boolean[] left = lh(y);
+		boolean[] right = rh(y);
+		boolean[] f_result = f(left, k);  // Get result from the round function
+		
+		// apply XOR to the arrays of R and f(L(x),k) and stores result in new_right
+		boolean[] new_left = xor(right, f_result);
+
+		// concatenate the new left with the old left and return
+		boolean[] result = concat(new_left, left);
+		return result;
 	}
 }
