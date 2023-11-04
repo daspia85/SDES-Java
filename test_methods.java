@@ -40,5 +40,34 @@ public class test_methods {
 		System.out.println("Testing feistel inverse:");
 		sdes.show(sdes.feistelInv(feistel_encode, key));
 		System.out.println();
+
+		String sample_string = "hello";
+		byte[] byte_string = new byte[]{104, 101, 108, 108, 111};
+
+		System.out.println("Testing byteArrayToCharString:");
+		System.out.println("Sample String: " + sample_string);
+		System.out.println(sdes.byteArrayToCharString(byte_string));
+		System.out.println();
+
+		System.out.println("Testing byteToBitArray:");
+		System.out.println("Sample String: " + sample_string);
+		for (int i = 0; i < byte_string.length; i++)
+			sdes.show(sdes.byteToBitArray(byte_string[i], 8));
+		System.out.println();	
+
+		System.out.println("Testing new bitArrayToByte:");
+		String bit_string = "01101000 01100101 01101100 01101100 01101111";
+		boolean[] bit_array = new boolean[]{false, true, true, false, true, true, false, false};
+		byte converted = 0;
+		for (int i = 0; i < bit_array.length; i++)
+			if (bit_array[bit_array.length - 1 - i])
+				converted += Math.pow(2, i);
+		System.out.println("Byte: " + converted);
+		System.out.println();
+		
+		// This also works
+		System.out.println("Testing bitArrayToByte:");
+		System.out.println("Byte: " + sdes.bitArrayToByte(bit_array));
+		System.out.println();
 	}
 }
