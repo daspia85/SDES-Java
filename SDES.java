@@ -5,7 +5,7 @@ public class SDES {
 	static boolean[] key10;
 	Scanner scanner;
 	public SDES() {
-		key10 = new boolean[10];
+		key10 = new boolean[8];
 		scanner = new Scanner(System.in);
 		getKey10(scanner);
 	}
@@ -66,10 +66,12 @@ public class SDES {
 		// Inital setup with initial permutation vector (IP)
 		bitArray = expPerm(bitArray, new int[]{1, 5, 2, 0, 3, 7, 4, 6});
 
-		// Go through 2 rounds of the feistel function
-		for (int i = 0; i < 2; i++) {
-			bitArray = feistel(bitArray, key10);
-		}
+		// Go through 2 rounds of the feistel function (k0 then k1)
+		/*boolean[] k0 = expPerm(key10, new int[]{0, 6, 8, 3, 7, 2, 9, 5});
+		bitArray = feistel(bitArray, k0);
+		boolean[] k1 = expPerm(key10, new int[]{7, 2, 5, 4, 9, 1, 8, 0});
+		bitArray = feistel(bitArray, k1);*/
+		bitArray = feistel(bitArray, key10);
 
 		// Post-setup with inverse of initial permutation vector (IP^{-1})
 		bitArray = expPerm(bitArray, new int[]{3, 0, 2, 4, 6, 1, 7, 5});
@@ -93,10 +95,12 @@ public class SDES {
 		// Inital setup with initial permutation vector (IP)
 		bitArray = expPerm(bitArray, new int[]{1, 5, 2, 0, 3, 7, 4, 6});
 
-		// Go through 2 rounds of the feistelInv function
-		for (int i = 0; i < 2; i++) {
-			bitArray = feistelInv(bitArray, key10);
-		}
+		// Go through 2 rounds of the feistelInv function (k1 then k0)
+		/*boolean[] k1 = expPerm(key10, new int[]{7, 2, 5, 4, 9, 1, 8, 0});
+		bitArray = feistel(bitArray, k1);
+		boolean[] k0 = expPerm(key10, new int[]{0, 6, 8, 3, 7, 2, 9, 5});
+		bitArray = feistel(bitArray, k0);*/
+		bitArray = feistel(bitArray, key10);
 
 		// Post-setup with inverse of initial permutation vector (IP^{-1})
 		bitArray = expPerm(bitArray, new int[]{3, 0, 2, 4, 6, 1, 7, 5});
@@ -354,15 +358,15 @@ public class SDES {
 		}
 
 		// create array equal to size
-		boolean[] array = new boolean[size];
+		boolean[] binary_string = new boolean[size];
+		String string_rep = String.format("%8s", Integer.toBinaryString(b & 0xFF)).replace(' ', '0');
+		for (int i = 0; i < string_rep.length(); i++)
+			if (string_rep.charAt(i) == '0')
+				binary_string[i] = false;
+			else
+				binary_string[i] = true;
 
-		// iterate through each bit starting from left to right
-		// bitwise AND to set bits 
-		for (int i = size -1; i >= 0; i--) {
-		    array[i] = (b & ( 1 << i)) != 0;
-		}
-
-		return array;
+		return binary_string;
 	}
 
 	/**
@@ -437,6 +441,10 @@ public class SDES {
 	 * @version 11/03/2023
 	 */
 	public boolean[] feistel(boolean[] x, boolean[] k) {
+		System.out.print("Input: ");
+		show(x);
+		System.out.print("Key: ");
+		show(k);
 		// Return left and right halfs of x
 		boolean[] left = lh(x);
 		boolean[] right = rh(x);
