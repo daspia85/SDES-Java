@@ -67,7 +67,6 @@ public class SDES {
 		bitArray = expPerm(bitArray, new int[]{1, 5, 2, 0, 3, 7, 4, 6});
 
 		// Go through 2 rounds of the feistel function
-		key10 = 
 		for (int i = 0; i < 2; i++) {
 			bitArray = feistel(bitArray, key10);
 		}
